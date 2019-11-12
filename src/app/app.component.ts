@@ -51,4 +51,15 @@ export class AppComponent {
     }
 
   }
+
+  calculate() {
+    for (const arr of this.arrayInputs) {
+      arr.forEach((element) => {
+        if (element.value.charAt(0) === '=') {
+
+          console.log(element.id);
+        }
+      });
+    }
+  }
 }

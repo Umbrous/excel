@@ -22,7 +22,7 @@
         <span class="content-name">Enter columns:</span>
       </label>
     </div>
-    <button id="generationTable"
+    <button class="btn"
             type="submit"
             [disabled]="rows.invalid || colls.invalid"
             (click)="generateTable()">
@@ -50,6 +50,8 @@
     </div>
   </div>
 
-  <button id="calc" class="btn btn-calc">Calculate</button>
+  <button id="calc"
+          class="btn btn-calc"
+          (click)="calculate()">Calculate</button>
 </div>
 

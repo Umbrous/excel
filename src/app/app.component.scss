@@ -4,7 +4,6 @@ body{
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
 }
-
 .container {
   max-width: 1170px;
   padding-right: 15px;
@@ -12,7 +11,6 @@ body{
   margin-right: auto;
   margin-left: auto;
 }
-
 h1{
   font-family: 'Pacifico', cursive;
   margin: 20px;
@@ -25,26 +23,30 @@ h1{
 }
 .form-generate{
   position: relative;
-  width: 20%;
+  width: 15%;
   margin: 0 auto;
   overflow: hidden;
   input{
     width: 100%;
     height: 30px;
-    color: #595f6e;
+    font-size: 18px;
+    color: #1e1f22;
     padding-top: 20px;
     border: none;
     outline: none;
-    &:focus + label .content-name,
-    &:valid + label .content-name{
-      transform: translateY(-150%);
-      font-size: 14px;
-      color: #5fa8d3;
     }
-    &:focus + label::after,
-    &:valid + label::after{
-      transform: translateX(0);
-    }
+  }
+  .ng-dirty.ng-valid + label:after{
+    border-bottom-color: #70cf70;
+  }
+  .ng-dirty.ng-invalid + label:after{
+    border-bottom-color: #f15151;
+  }
+  .ng-dirty.ng-valid + label .content-name{
+    color: #70cf70;
+  }
+  .ng-dirty.ng-invalid + label .content-name{
+    color: #f15151;
   }
   label{
     position: absolute;
@@ -62,19 +64,43 @@ h1{
       left: 0;
       bottom: -1px;
       border-bottom: 3px solid #5fa8d3;
-      transform: translateX(-100%);
-      transition: all .3s ease;
+      transition: all .5s ease;
     }
     .content-name{
       position: absolute;
       bottom: 5px;
       left: 0;
-      transition: all .3s ease;
+      font-size: 14px;
+      color: #5fa8d3;
+      transform: translateY(-150%);
     }
   }
-
+  .btn{
+    display: block;
+    margin: 20px auto;
+    text-decoration: none;
+    border:1px solid #70cf70;
+    font-family:arial, helvetica, sans-serif;
+    padding: 10px 10px 10px 10px;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    background-color: #70cf70;
+    background-image: linear-gradient(to top, #a2d3a2, #70cf70);
+    &:disabled{
+      border:1px solid #25729a;
+      background-color: #3093c7;
+      background-image: linear-gradient(to top, #3093c7, #1c5a85);
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
 }
-
+.btn:hover{
+    border:1px solid #fff;
+    background-color: #70cf70;
+    background-image: linear-gradient(to top, #a2d3a2, #70cf70);
+}
 .table-header{
   display: flex;
   margin-top: 20px;
@@ -82,7 +108,6 @@ h1{
   text-align: center;
   &__col{
     width: 100px;
-    // padding: 5px 10px;
     background: #AFCDE7;
     color: white;
     border-right: 1px solid #fff;
