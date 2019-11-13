@@ -43,6 +43,7 @@
       <div class="table-body__col" *ngFor="let column of row">
         <input *ngIf="column.id !== '#'"
                type="text"
+               [value]="column.value"
                (blur)="onUpdate($event, column.id)"
                />
         <span *ngIf="column.id === '#'">{{column.value}}</span>

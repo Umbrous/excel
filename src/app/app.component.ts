@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import calc from './data/calc';
 
 @Component({
   selector: 'app-root',
@@ -53,13 +54,42 @@ export class AppComponent {
   }
 
   calculate() {
-    for (const arr of this.arrayInputs) {
-      arr.forEach((element) => {
+    for (let i = 1; i < this.arrayInputs.length; i++) {
+
+      this.arrayInputs[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
 
-          console.log(element.id);
+          let expression = element.value.slice(1);
+          let ids = expression.split(/[\*,+,\/,-]+/);
+          const valueArrays = this.getValueArray(ids);
+          if (Array.isArray(valueArrays)) {
+            for (let j = 0; j < ids.length; j++) {
+              expression = expression.replace(ids[j], valueArrays[j]);
+            }
+            element.value = calc(expression);
+          } else {
+            element.value = valueArrays;
+          }
         }
       });
     }
+
   }
+
+  getValueArray(arrayId: Array<string>) {
+    let resultArr = [];
+    for (const id of arrayId) {
+      for (let i = 1; i < this.arrayInputs.length; i++) {
+        let tempValue = this.arrayInputs[i].find(x => x.id === id );
+        if (tempValue) {
+          if (isNaN(tempValue.value)) {
+            return '!VALID';
+          }
+          resultArr.push(parseInt(tempValue.value));
+        }
+      }
+    }
+    return resultArr;
+  }
+
 }
