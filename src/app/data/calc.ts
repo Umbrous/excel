@@ -45,16 +45,16 @@ function calc(arr: Array<string>) {
       switch (operators[i]) {
         case '*':
           result = firstOperand * secondOperand;
-          arr.splice(currentPosition-1, 3, result);
+          arr.splice(currentPosition - 1, 3, result);
           break;
         case '/':
           result = firstOperand / secondOperand;
-          arr.splice(currentPosition-1, 3, result);
+          arr.splice(currentPosition - 1, 3, result);
           break;
         default:
           firstOperand = parseFloat(arr[0]);
           secondOperand = parseFloat(arr[2]);
-          if (arr[1] === '+'){
+          if (arr[1] === '+') {
               result = firstOperand + secondOperand;
           } else {
               result = firstOperand - secondOperand;

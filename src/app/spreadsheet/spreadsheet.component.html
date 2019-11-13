@@ -1,0 +1,24 @@
+<div>
+  <div class=container>
+    <div class="table-header">
+      <div class="table-header__col" *ngFor="let char of headers;">
+        {{ char }}
+      </div>
+    </div>
+
+    <div class="table-body" *ngFor="let row of arrayInputs">
+      <div class="table-body__col" *ngFor="let column of row">
+        <input *ngIf="column.id !== '#'"
+               type="text"
+               [value]="column.value"
+               (blur)="onUpdate($event, column.id)"
+               />
+        <span *ngIf="column.id === '#'">{{column.value}}</span>
+      </div>
+    </div>
+  </div>
+
+  <button id="calc"
+          class="btn btn-calc"
+          (click)="calculate()">Calculate</button>
+</div>

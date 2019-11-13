@@ -2,7 +2,7 @@
 <div class="container">
   <h1>{{ title }}</h1>
 
-  <form class="form-generate">
+  <form class="form-generate" *ngIf="!activateTable">
     <div class="form-group">
       <input type="text"
       [formControl]="rows"
@@ -30,29 +30,9 @@
     </button>
   </form>
 </div>
+<app-spreadsheet [rows]="rows.value"
+                 [colls]="colls.value"
+                 *ngIf="activateTable">
+</app-spreadsheet>
 
-<div *ngIf="activateTable">
-  <div class=container>
-    <div class="table-header">
-      <div class="table-header__col" *ngFor="let char of headers;">
-        {{ char }}
-      </div>
-    </div>
-
-    <div class="table-body" *ngFor="let row of arrayInputs">
-      <div class="table-body__col" *ngFor="let column of row">
-        <input *ngIf="column.id !== '#'"
-               type="text"
-               [value]="column.value"
-               (blur)="onUpdate($event, column.id)"
-               />
-        <span *ngIf="column.id === '#'">{{column.value}}</span>
-      </div>
-    </div>
-  </div>
-
-  <button id="calc"
-          class="btn btn-calc"
-          (click)="calculate()">Calculate</button>
-</div>
 
