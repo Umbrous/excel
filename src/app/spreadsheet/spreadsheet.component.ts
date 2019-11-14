@@ -16,12 +16,16 @@ export class SpreadsheetComponent implements OnInit {
   generateTable() {
     this.arrayInputs = [];
     this.headers = ['#'];
+
     for (let i = 0; i <= this.rows; i++) {
       const columns: Array<TableId> = [];
+
       if (i > 0) {
         columns.push({id: '#', value: i.toString()});
       }
+
       for (let j = 0; j < this.cols; j++) {
+
         if (i === 0 ) {
           this.headers.push(String.fromCharCode(65 + j));
         } else {
@@ -30,8 +34,11 @@ export class SpreadsheetComponent implements OnInit {
             value: ''
           });
         }
+
       }
+
       this.arrayInputs.push(columns);
+
     }
 
   }
@@ -39,11 +46,15 @@ export class SpreadsheetComponent implements OnInit {
   onUpdate(event: any, id: string) {
 
     for (const arr of this.arrayInputs) {
+
       arr.forEach((element) => {
+
         if (element.id === id) {
           element.value = event.target.value;
         }
+
       });
+
     }
 
   }
@@ -61,13 +72,23 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   calculateExpression(expression: string) {
-    const ids = expression.split(/[\*,+,\/,-]+/);
+    const ids = expression.trim().split(/[\*,+,\/,-]+/);
     const valueArrays = this.getValueArray(ids);
+
     if (Array.isArray(valueArrays)) {
-      for (let j = 0; j < ids.length; j++) {
-        expression = expression.replace(ids[j], valueArrays[j]);
+      if ( valueArrays.length !== 1) {
+
+        return valueArrays.join();
+
+      } else {
+
+        for (let j = 0; j < ids.length; j++) {
+          expression = expression.replace(ids[j], valueArrays[j]);
+        }
+
+        return calc(expression);
       }
-      return calc(expression);
+
     } else {
       return valueArrays;
     }
@@ -75,10 +96,14 @@ export class SpreadsheetComponent implements OnInit {
 
   getValueArray(arrayId: Array<string>) {
     let resultArr = [];
+
     for (const id of arrayId) {
+
       for (let i = 1; i < this.arrayInputs.length; i++) {
         const tempValue: any = this.arrayInputs[i].find(x => x.id === id );
+
         if (tempValue) {
+
           if (isNaN(tempValue.value) && tempValue.value[0] !== '=') {
             return '!VALID';
           } else if (tempValue.value[0] === '=') {
@@ -88,8 +113,11 @@ export class SpreadsheetComponent implements OnInit {
           }
 
         }
+
       }
+
     }
+
     return resultArr;
   }
 
