@@ -76,7 +76,7 @@ export class SpreadsheetComponent implements OnInit {
     const valueArrays = this.getValueArray(ids);
 
     if (Array.isArray(valueArrays)) {
-      if ( valueArrays.length !== 1) {
+      if ( valueArrays.length === 1) {
 
         return valueArrays.join();
 
@@ -95,21 +95,27 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   getValueArray(arrayId: Array<string>) {
-    let resultArr = [];
+    const resultArr = [];
 
     for (const id of arrayId) {
+      if (!isNaN(id as any)) {
+        resultArr.push(parseInt(id));
+        debugger;
+      } else {
 
-      for (let i = 1; i < this.arrayInputs.length; i++) {
-        const tempValue: any = this.arrayInputs[i].find(x => x.id === id );
+        for (let i = 1; i < this.arrayInputs.length; i++) {
+          const tempValue: any = this.arrayInputs[i].find(x => x.id === id );
 
-        if (tempValue) {
+          if (tempValue) {
 
-          if (isNaN(tempValue.value) && tempValue.value[0] !== '=') {
-            return '!VALID';
-          } else if (tempValue.value[0] === '=') {
-            resultArr.push(this.calculateExpression(tempValue.value.slice(1)));
-          } else {
-            resultArr.push(parseInt(tempValue.value));
+            if (isNaN(tempValue.value) && tempValue.value[0] !== '=') {
+              return '!VALID';
+            } else if (tempValue.value[0] === '=') {
+              resultArr.push(this.calculateExpression(tempValue.value.slice(1)));
+            } else {
+              resultArr.push(parseInt(tempValue.value));
+            }
+
           }
 
         }
@@ -117,7 +123,7 @@ export class SpreadsheetComponent implements OnInit {
       }
 
     }
-
+    debugger;
     return resultArr;
   }
 
