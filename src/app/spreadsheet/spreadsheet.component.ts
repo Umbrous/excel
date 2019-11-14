@@ -100,7 +100,6 @@ export class SpreadsheetComponent implements OnInit {
     for (const id of arrayId) {
       if (!isNaN(id as any)) {
         resultArr.push(parseInt(id));
-        debugger;
       } else {
 
         for (let i = 1; i < this.arrayInputs.length; i++) {
@@ -108,7 +107,7 @@ export class SpreadsheetComponent implements OnInit {
 
           if (tempValue) {
 
-            if (isNaN(tempValue.value) && tempValue.value[0] !== '=') {
+            if (isNaN(tempValue.value) && tempValue.value[0] !== '=' || tempValue.value === '') {
               return '!VALID';
             } else if (tempValue.value[0] === '=') {
               resultArr.push(this.calculateExpression(tempValue.value.slice(1)));
@@ -123,7 +122,6 @@ export class SpreadsheetComponent implements OnInit {
       }
 
     }
-    debugger;
     return resultArr;
   }
 
