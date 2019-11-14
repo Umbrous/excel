@@ -5,9 +5,11 @@
   text-align: center;
   &__col{
     width: 100px;
+    padding: 0 1px;
     background: #AFCDE7;
     color: white;
     border-right: 1px solid #fff;
+    box-sizing: content-box;
     &:first-child{
       width: 20px;
     }
@@ -22,10 +24,12 @@
   justify-content: center;
   align-items: baseline;
   &__col{
+    padding: 0 1px;
+    width: 100px;
     border-style: solid;
     border-width: 0 1px 1px 0;
     border-color: #AFCDE7;
-    width: 100px;
+    box-sizing: content-box;
     &:first-child{
       width: 20px;
       text-align: center;

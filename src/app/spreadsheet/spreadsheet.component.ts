@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import calc from '../data/calc';
+import { TableId } from '../data/table-id';
 
 @Component({
   selector: 'app-spreadsheet',
@@ -7,23 +8,20 @@ import calc from '../data/calc';
   styleUrls: ['./spreadsheet.component.scss']
 })
 export class SpreadsheetComponent implements OnInit {
-  ngOnInit(): void {
-    this.generateTable();
-  }
-  headers = [];
-  arrayInputs = [];
+  headers: Array<string>;
+  arrayInputs: Array<Array<TableId>>;
   @Input() rows: number;
-  @Input() colls: number;
+  @Input() cols: number;
 
   generateTable() {
     this.arrayInputs = [];
     this.headers = ['#'];
     for (let i = 0; i <= this.rows; i++) {
-      let columns = [];
-      if(i > 0) {
+      const columns: Array<TableId> = [];
+      if (i > 0) {
         columns.push({id: '#', value: i.toString()});
       }
-      for (let j = 0; j < this.colls; j++) {
+      for (let j = 0; j < this.cols; j++) {
         if (i === 0 ) {
           this.headers.push(String.fromCharCode(65 + j));
         } else {
@@ -79,7 +77,7 @@ export class SpreadsheetComponent implements OnInit {
     let resultArr = [];
     for (const id of arrayId) {
       for (let i = 1; i < this.arrayInputs.length; i++) {
-        let tempValue = this.arrayInputs[i].find(x => x.id === id );
+        const tempValue: any = this.arrayInputs[i].find(x => x.id === id );
         if (tempValue) {
           if (isNaN(tempValue.value) && tempValue.value[0] !== '=') {
             return '!VALID';
@@ -93,6 +91,10 @@ export class SpreadsheetComponent implements OnInit {
       }
     }
     return resultArr;
+  }
+
+  ngOnInit(): void {
+    this.generateTable();
   }
 
 }

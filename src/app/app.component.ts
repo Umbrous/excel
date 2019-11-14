@@ -13,7 +13,7 @@ export class AppComponent {
   rows = new FormControl('',  [Validators.required,
                               Validators.pattern('[0-9]+$'),
                               Validators.max(50)]);
-  colls = new FormControl('', [Validators.required,
+  cols = new FormControl('', [Validators.required,
                               Validators.pattern('[0-9]+$'),
                               Validators.max(26)]);
 

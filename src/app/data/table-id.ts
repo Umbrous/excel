@@ -1,4 +1,4 @@
 export interface TableId {
-  id: string | number,
-  value: string
+  id: string | number;
+  value: string;
 }

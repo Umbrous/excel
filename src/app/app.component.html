@@ -14,24 +14,24 @@
     </div>
     <div class="form-group">
       <input type="text"
-      [formControl]="colls"
-      id="colls"
-      name="colls"
+      [formControl]="cols"
+      id="cols"
+      name="cols"
       />
-      <label for="colls">
+      <label for="cols">
         <span class="content-name">Enter columns:</span>
       </label>
     </div>
     <button class="btn"
             type="submit"
-            [disabled]="rows.invalid || colls.invalid"
+            [disabled]="rows.invalid || cols.invalid"
             (click)="generateTable()">
             Generate table
     </button>
   </form>
 </div>
 <app-spreadsheet [rows]="rows.value"
-                 [colls]="colls.value"
+                 [cols]="cols.value"
                  *ngIf="activateTable">
 </app-spreadsheet>
 
