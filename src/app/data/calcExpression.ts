@@ -65,3 +65,4 @@ function calc(arr: Array<string>) {
   }
   return arr[0];
 }
+

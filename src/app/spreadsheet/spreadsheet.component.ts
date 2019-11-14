@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import calc from '../data/calc';
+import calc from '../data/calcExpression';
 import { TableId } from '../data/table-id';
 
 @Component({
