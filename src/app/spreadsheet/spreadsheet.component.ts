@@ -13,7 +13,7 @@ export class SpreadsheetComponent implements OnInit {
   arrayInputs: TableId[][];
   rows: number;
   cols: number;
-  showMessage = false;
+  showMessage: boolean;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -51,16 +51,16 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   calculate() {
+    let existExpression = false;
     for (let i = 1; i < this.arrayInputs.length; i++) {
       this.arrayInputs[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
+          existExpression = true;
           element.value = this.calculateExpression(element.value.slice(1));
-          this.showMessage = false;
-        } else {
-          this.showMessage = true;
         }
       });
     }
+    this.showMessage = !existExpression;
   }
 
   calculateExpression(expression: string) {
