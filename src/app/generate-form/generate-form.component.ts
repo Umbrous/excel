@@ -11,7 +11,6 @@ export class GenerateFormComponent {
 
   constructor(private router: Router) { }
 
-  activateTable = false;
   rows = new FormControl('',  [Validators.required,
                               Validators.pattern('[0-9]+$'),
                               Validators.max(50)]);
@@ -20,7 +19,6 @@ export class GenerateFormComponent {
                               Validators.max(26)]);
 
   generateTable() {
-    this.activateTable = true;
     this.router.navigate(['/table'],
                         {queryParams: {
                           rows: this.rows.value,
