@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import calc from '../data/calcExpression';
 import { TableId } from '../data/table-id';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-spreadsheet',
@@ -10,8 +11,10 @@ import { TableId } from '../data/table-id';
 export class SpreadsheetComponent implements OnInit {
   headers: string[];
   arrayInputs: TableId[][];
-  @Input() rows: number;
-  @Input() cols: number;
+  rows: number;
+  cols: number;
+
+  constructor(private route: ActivatedRoute) {}
 
   generateTable() {
     this.arrayInputs = [];
@@ -19,13 +22,10 @@ export class SpreadsheetComponent implements OnInit {
 
     for (let i = 0; i <= this.rows; i++) {
       const columns: TableId[] = [];
-
       if (i > 0) {
         columns.push({id: '#', value: i.toString()});
       }
-
       for (let j = 0; j < this.cols; j++) {
-
         if (i === 0 ) {
           this.headers.push(String.fromCharCode(65 + j));
         } else {
@@ -34,29 +34,19 @@ export class SpreadsheetComponent implements OnInit {
             value: ''
           });
         }
-
       }
-
       this.arrayInputs.push(columns);
-
     }
-
   }
 
   onUpdate(event: any, id: string) {
-
     for (const arr of this.arrayInputs) {
-
       arr.forEach((element) => {
-
         if (element.id === id) {
           element.value = event.target.value;
         }
-
       });
-
     }
-
   }
 
   calculate() {
@@ -75,18 +65,13 @@ export class SpreadsheetComponent implements OnInit {
 
     if (Array.isArray(valueArrays)) {
       if ( valueArrays.length === 1) {
-
         return valueArrays.join();
-
       } else {
-
         for (let j = 0; j < ids.length; j++) {
           expression = expression.replace(ids[j], valueArrays[j]);
         }
-
         return calc(expression);
       }
-
     } else {
       return valueArrays;
     }
@@ -99,12 +84,9 @@ export class SpreadsheetComponent implements OnInit {
       if (!isNaN(id as any)) {
         resultArr.push(parseInt(id));
       } else {
-
         for (let i = 1; i < this.arrayInputs.length; i++) {
           const tempValue: any = this.arrayInputs[i].find(x => x.id === id );
-
           if (tempValue) {
-
             if (isNaN(tempValue.value) && tempValue.value[0] !== '=' || tempValue.value === '') {
               return '!VALID';
             } else if (tempValue.value[0] === '=') {
@@ -112,18 +94,20 @@ export class SpreadsheetComponent implements OnInit {
             } else {
               resultArr.push(parseInt(tempValue.value));
             }
-
           }
-
         }
-
       }
-
     }
     return resultArr;
   }
 
   ngOnInit(): void {
+    let routeParams = this.route.queryParams;
+    routeParams.subscribe((data) => {
+      this.rows = data.rows;
+      this.cols = data.cols;
+  });
+
     this.generateTable();
   }
 

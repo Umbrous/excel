@@ -1,0 +1,33 @@
+<form class="form-generate" *ngIf="!activateTable">
+  <div class="form-group">
+    <input type="text"
+    autocomplete="off"
+    [formControl]="rows"
+    id="rows"
+    name="rows"/>
+    <label for="rows">
+      <span class="content-name">Enter rows:</span>
+    </label>
+  </div>
+  <div class="form-group">
+    <input type="text"
+    autocomplete="off"
+    [formControl]="cols"
+    id="cols"
+    name="cols"
+    />
+    <label for="cols">
+      <span class="content-name">Enter columns:</span>
+    </label>
+  </div>
+  <button class="btn"
+          type="submit"
+          [disabled]="rows.invalid || cols.invalid"
+          (click)="generateTable()">
+          Generate table
+  </button>
+</form>
+
+<app-spreadsheet *ngIf="activateTable"></app-spreadsheet>
+
+

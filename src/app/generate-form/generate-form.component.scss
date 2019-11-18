@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Pacifico&display=swap');
+@import '../variables.scss';
+
+body{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+.container {
+  max-width: 1170px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+h1{
+  font-family: 'Pacifico', cursive;
+  margin: 20px;
+  font-size: 40px;
+  text-align: center;
+  color: $primary;
+}
+.form-group{
+  position: relative;
+}
+.form-generate{
+  position: relative;
+  width: 15%;
+  margin: 0 auto;
+  overflow: hidden;
+  input{
+    width: 100%;
+    height: 30px;
+    font-size: 18px;
+    color: $grey;
+    padding-top: 20px;
+    border: none;
+    outline: none;
+    &:focus + label:after{
+      transform: translateX(0);
+    }
+    &:focus + label .content-name{
+      transform: translateY(-120%);
+    }
+  }
+  .ng-dirty.ng-valid + label:after{
+    border-bottom-color: $success;
+    transform: translateX(0);
+  }
+  .ng-dirty.ng-invalid + label:after{
+    border-bottom-color: $warning;
+    transform: translateX(0);
+  }
+  .ng-dirty.ng-valid + label .content-name{
+    color: $success;
+    transform: translateY(-120%);
+  }
+  .ng-dirty.ng-invalid + label .content-name{
+    color: $warning;
+    transform: translateY(-120%);
+  }
+  label{
+    position: absolute;
+    bottom: 0;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-bottom: 1px solid $primary;
+    &:after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      bottom: -1px;
+      border-bottom: 3px solid $lightPrimary;
+      transform: translateX(-100%);
+      transition: all .5s ease;
+    }
+    .content-name{
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      font-size: 14px;
+      color: $lightPrimary;
+      transform: translateY(0);
+      transition: all .5s ease;
+    }
+  }
+  .btn{
+    display: block;
+    margin: 20px auto;
+    text-decoration: none;
+    border:1px solid $success;
+    font-family:arial, helvetica, sans-serif;
+    padding: 10px 10px 10px 10px;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    color: $white;
+    cursor: pointer;
+    background-color: $success;
+    background-image: linear-gradient(to top, $lightSuccess, $success);
+    &:disabled{
+      border:1px solid $primary;
+      background-color: $lightPrimary;
+      background-image: linear-gradient(to top, $lightPrimary, $primary);
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+}
+  .btn:active:hover{
+    border:1px solid $white;
+    background-color: $success;
+    background-image: linear-gradient(to top,  $lightSuccess, $success);
+  }
+}
