@@ -5,6 +5,7 @@
   <form class="form-generate" *ngIf="!activateTable">
     <div class="form-group">
       <input type="text"
+      autocomplete="off"
       [formControl]="rows"
       id="rows"
       name="rows"/>
@@ -14,6 +15,7 @@
     </div>
     <div class="form-group">
       <input type="text"
+      autocomplete="off"
       [formControl]="cols"
       id="cols"
       name="cols"

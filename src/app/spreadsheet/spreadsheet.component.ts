@@ -8,8 +8,8 @@ import { TableId } from '../data/table-id';
   styleUrls: ['./spreadsheet.component.scss']
 })
 export class SpreadsheetComponent implements OnInit {
-  headers: Array<string>;
-  arrayInputs: Array<Array<TableId>>;
+  headers: string[];
+  arrayInputs: TableId[][];
   @Input() rows: number;
   @Input() cols: number;
 
@@ -18,7 +18,7 @@ export class SpreadsheetComponent implements OnInit {
     this.headers = ['#'];
 
     for (let i = 0; i <= this.rows; i++) {
-      const columns: Array<TableId> = [];
+      const columns: TableId[] = [];
 
       if (i > 0) {
         columns.push({id: '#', value: i.toString()});
@@ -61,14 +61,12 @@ export class SpreadsheetComponent implements OnInit {
 
   calculate() {
     for (let i = 1; i < this.arrayInputs.length; i++) {
-
       this.arrayInputs[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
           element.value = this.calculateExpression(element.value.slice(1));
         }
       });
     }
-
   }
 
   calculateExpression(expression: string) {
@@ -94,7 +92,7 @@ export class SpreadsheetComponent implements OnInit {
     }
   }
 
-  getValueArray(arrayId: Array<string>) {
+  getValueArray(arrayId: string[]) {
     const resultArr = [];
 
     for (const id of arrayId) {
