@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
   selector: 'app-generate-form',
   templateUrl: './generate-form.component.html',
   styleUrls: ['./generate-form.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class GenerateFormComponent {
 

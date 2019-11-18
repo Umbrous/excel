@@ -13,6 +13,7 @@ export class SpreadsheetComponent implements OnInit {
   arrayInputs: TableId[][];
   rows: number;
   cols: number;
+  showMessage = false;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -54,6 +55,9 @@ export class SpreadsheetComponent implements OnInit {
       this.arrayInputs[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
           element.value = this.calculateExpression(element.value.slice(1));
+          this.showMessage = false;
+        } else {
+          this.showMessage = true;
         }
       });
     }
@@ -102,7 +106,7 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let routeParams = this.route.queryParams;
+    const routeParams = this.route.queryParams;
     routeParams.subscribe((data) => {
       this.rows = data.rows;
       this.cols = data.cols;
