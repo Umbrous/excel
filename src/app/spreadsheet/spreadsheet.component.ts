@@ -3,17 +3,24 @@ import calc from '../data/calcExpression';
 import { TableId } from '../data/table-id';
 import { ActivatedRoute } from '@angular/router';
 
+import { ExpressionCalculator } from '../data/calcExpression';
+
 @Component({
   selector: 'app-spreadsheet',
   templateUrl: './spreadsheet.component.html',
   styleUrls: ['./spreadsheet.component.scss']
 })
+
 export class SpreadsheetComponent implements OnInit {
-  headers: string[];
-  arrayInputs: TableId[][];
-  rows: number;
-  cols: number;
-  showMessage: boolean;
+  public headers: string[];
+
+  public  arrayInputs: TableId[][];
+
+  private  rows: number;
+
+  private  cols: number;
+
+  public  showMessage = false;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -51,16 +58,22 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   calculate() {
-    let existExpression = false;
+    // this.showMessage = false;
     for (let i = 1; i < this.arrayInputs.length; i++) {
       this.arrayInputs[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
-          existExpression = true;
+          const clearExpression = element.value.slice(1);
+
+          // rewrite
+
+
+
+          // this.showMessage = true;
           element.value = this.calculateExpression(element.value.slice(1));
         }
       });
     }
-    this.showMessage = !existExpression;
+    // this.showMessage = !this.showMessage;
   }
 
   calculateExpression(expression: string) {
@@ -74,7 +87,12 @@ export class SpreadsheetComponent implements OnInit {
         for (let j = 0; j < ids.length; j++) {
           expression = expression.replace(ids[j], valueArrays[j]);
         }
-        return calc(expression);
+
+        const expressionCalculator =  new ExpressionCalculator();
+        const ExpressionArray = expressionCalculator.convertExpressionToArray(expression);
+        const temp = expressionCalculator.calculation(ExpressionArray);
+
+        return temp;
       }
     } else {
       return valueArrays;
