@@ -47,18 +47,17 @@ export class SpreadsheetComponent implements OnInit {
   }
 
   calculateTable() {
-    for (let i = 1; i < this.bodyTable.length; i++) {
-      this.bodyTable[i].forEach((element) => {
+    this.toggleMessage();
+    for (const row of this.bodyTable) {
+      row.forEach((element) => {
         if (element.value.charAt(0) === '=') {
           this.toggleMessage();
           const expression = element.value.slice(1);
           const calculateExpression = new ExpressionCalculator();
           element.value = calculateExpression.getResultFromExpression(expression, this.bodyTable);
-        } else {
-          this.toggleMessage();
         }
-      });
-    }
+    });
+  }
   }
 
   toggleMessage() {
