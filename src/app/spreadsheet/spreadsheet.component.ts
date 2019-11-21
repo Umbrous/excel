@@ -24,6 +24,11 @@ export class SpreadsheetComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {}
 
+  public trackBy(index, item) {
+    if (!item) { return null; }
+    return index;
+  }
+
   generateTable() {
     this.arrayInputs = [];
     this.headers = ['#'];

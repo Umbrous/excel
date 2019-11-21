@@ -1,13 +1,13 @@
 <div class=container>
   <div>
     <div class="table-header">
-      <div class="table-header__col" *ngFor="let char of headers;">
+      <div class="table-header__col" *ngFor="let char of headers; trackBy:trackBy">
         {{ char }}
       </div>
     </div>
 
-    <div class="table-body" *ngFor="let row of arrayInputs">
-      <div class="table-body__col" *ngFor="let column of row">
+    <div class="table-body" *ngFor="let row of arrayInputs; trackBy:trackBy">
+      <div class="table-body__col" *ngFor="let column of row; trackBy:trackBy">
         <input *ngIf="column.id !== '#'"
                type="text"
                [value]="column.value"
