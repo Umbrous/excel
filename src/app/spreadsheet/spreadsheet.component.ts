@@ -51,8 +51,8 @@ export class SpreadsheetComponent implements OnInit {
       this.bodyTable[i].forEach((element) => {
         if (element.value.charAt(0) === '=') {
           this.toggleMessage();
-          const calculateExpression = new ExpressionCalculator();
           const expression = element.value.slice(1);
+          const calculateExpression = new ExpressionCalculator();
           element.value = calculateExpression.getResultFromExpression(expression, this.bodyTable);
         } else {
           this.toggleMessage();
@@ -71,6 +71,7 @@ export class SpreadsheetComponent implements OnInit {
       this.rows = data.rows;
       this.cols = data.cols;
     });
+    this.generateTable();
   }
 
 }
