@@ -1,10 +1,7 @@
 import { Priority } from './priority';
+import { IOperator } from './operator';
+import { IBodyCell } from '../spreadsheet/cell';
 
-export interface IOperator {
-  value: string;
-  priority: Priority;
-  operatorAction: (leftOperand: number, rightOperand: number) => number;
-}
 export class Operator implements IOperator {
   public value: string;
   public priority: Priority;
@@ -26,7 +23,7 @@ export class OperatorFactory {
   }
 }
 
-export class ExpressionCalculator {
+export default class ExpressionCalculator {
   private readonly defaultApplicationOperators: Array<IOperator> = [];
 
   private readonly OperatorFactory: OperatorFactory;
@@ -72,6 +69,7 @@ export class ExpressionCalculator {
   }
 
   public calculation(elementsExpression: string[]): string {
+    let result: string;
 
     for ( const operator of this.defaultApplicationOperators ) {
       for ( let index = 0; index < elementsExpression.length; index++ ) {
@@ -84,17 +82,59 @@ export class ExpressionCalculator {
           const value = operator.operatorAction(leftOperand, rightOperand);
 
           elementsExpression.splice(leftIndex, 3, value.toString());
-
           index = 0;
         }
       }
     }
+    result = elementsExpression[0];
 
-    return elementsExpression[0];
+    return result;
   }
-}
 
-// rewrite cod
-export default function(str: string) {
-  return this.calculation(this.convertExpressionToArray(str));
+  public getResultFromExpression(expression: string, arrayValues: Array<Array<IBodyCell>>): string {
+    let result: string;
+    const regExpOperators = /[\*,+,\/,-]+/;
+    const arrayIds = expression.trim().split(regExpOperators);
+    const valueArrays = this.getValueFromArrayId(arrayIds, arrayValues);
+
+    if (valueArrays.length === 0 || valueArrays.length === 1) {
+      return valueArrays.join() || '!VALID';
+    }
+
+    for (let id = 0; id < arrayIds.length; id++) {
+      expression = expression.replace(arrayIds[id], valueArrays[id].toString());
+    }
+
+    const ExpressionArray = this.convertExpressionToArray(expression);
+    result = this.calculation(ExpressionArray);
+
+    return result;
+  }
+
+  public getValueFromArrayId(arrayIds: string[], arrayValues: Array<Array<IBodyCell>> ): number[] {
+    const values: number[] = [];
+
+    for (const id of arrayIds) {
+      if (!isNaN(+id)) {
+        values.push(parseInt(id));
+      } else {
+        for (const row of arrayValues) {
+          const findCell: IBodyCell = row.find(cell => cell.id === id );
+          if (findCell) {
+            if (isNaN(+findCell.value)
+              && findCell.value[0] !== '='
+              || findCell.value === '') {
+                values.length = 0;
+              return values;
+            } else if (findCell.value[0] === '=') {
+              values.push(+this.getResultFromExpression(findCell.value.slice(1), arrayValues));
+            } else {
+              values.push(parseInt(findCell.value));
+            }
+          }
+        }
+      }
+    }
+    return values;
+  }
 }

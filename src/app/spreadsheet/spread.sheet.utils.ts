@@ -1,9 +1,11 @@
 export class SpreadSheetUtils {
   private readonly UNICODE_START_LETTER_CHAR: number = 65;
 
-  private readonly INCREMENT_COLUMN_INDEX_NUMBER: number = 1;
+  public generateColumnNumber(rowIndex: number, startIndex: number) {
+    return `${String.fromCharCode(this.UNICODE_START_LETTER_CHAR + startIndex)}${rowIndex}`;
+  }
 
-  public GenerateColumnNumber(columnIndex: number) {
-    return `${String.fromCharCode(this.UNICODE_START_LETTER_CHAR + columnIndex)}${columnIndex + this.INCREMENT_COLUMN_INDEX_NUMBER}`;
+  public generateHeaderColumnValue(columnIndex: number) {
+    return String.fromCharCode(this.UNICODE_START_LETTER_CHAR + columnIndex);
   }
 }

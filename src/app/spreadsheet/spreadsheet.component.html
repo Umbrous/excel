@@ -1,17 +1,17 @@
 <div class=container>
   <div>
     <div class="table-header">
-      <div class="table-header__col" *ngFor="let char of headers; trackBy:trackBy">
-        {{ char }}
+      <div class="table-header__col" *ngFor="let char of headerTable; trackBy:trackBy">
+        {{ char.value }}
       </div>
     </div>
 
-    <div class="table-body" *ngFor="let row of arrayInputs; trackBy:trackBy">
+    <div class="table-body" *ngFor="let row of bodyTable; trackBy:trackBy">
       <div class="table-body__col" *ngFor="let column of row; trackBy:trackBy">
         <input *ngIf="column.id !== '#'"
                type="text"
                [value]="column.value"
-               (blur)="onUpdate($event, column.id)"
+               (blur)="onChangeTable($event, column.id)"
                />
         <span *ngIf="column.id === '#'">{{column.value}}</span>
       </div>
@@ -21,7 +21,7 @@
 
   <button id="calc"
           class="btn btn-calc"
-          (click)="calculate()">
+          (click)="calculateTable()">
           Calculate
   </button>
   <button class="btn btn-new"

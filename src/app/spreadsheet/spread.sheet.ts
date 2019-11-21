@@ -1,77 +1,85 @@
 import { SpreadSheetUtils } from './spread.sheet.utils';
+import { ICell, IBodyCell } from './cell';
 
-export interface ICell {
-  Value: string;
-}
-
-export interface IHeaderCell extends ICell {
-  Value: string;
-}
-
-export class HeaderCell implements IHeaderCell {
-  public Value: string;
-  public Id: string;
+export class Cell implements ICell {
+  public value: string;
+  public id: string;
 }
 
 export abstract class BuilderBase {
-  protected readonly SpreadSheetUtils: SpreadSheetUtils;
+  protected readonly spreadSheetUtils: SpreadSheetUtils;
 
   constructor() {
-    this.SpreadSheetUtils = new SpreadSheetUtils();
+    this.spreadSheetUtils = new SpreadSheetUtils();
   }
 
 }
 
-export class HeaderCellBuilder extends BuilderBase {
+export default class CellBuilder extends BuilderBase {
   private readonly DEFAULT_COLUMN_CHAR: string = '#';
 
-  private readonly HeaderCells: Array<IHeaderCell> = [];
+  private readonly headerCells: Array<ICell> = [];
+  private readonly bodyCells: Array<Array<IBodyCell>> = [];
 
   constructor()  {
     super();
   }
 
-  public BuildHeaderCells(columnNumbers: number): Array<ICell> {
+  public buildHeaderCells(columnNumbers: number): Array<ICell> {
 
-    this.Reset();
-    this.InsertDefaultColumn();
+    this.headerCells.length = 0;
+    this.headerCells.push(this.insertDefaultColumn());
 
     for (let index = 0; index < columnNumbers; index++) {
-        const column = this.NewHeaderCell();
-        column.Value = this.GenerateColumnNumber(index);
-        this.HeaderCells.push(column);
+      const cell = this.newCell();
+      cell.value = this.generateHeaderColumnNumber(index);
+      this.headerCells.push(cell);
     }
 
-    return this.HeaderCells;
+    return this.headerCells;
   }
 
-  private Reset() {
-    this.HeaderCells.length = 0;
+  public buildBodyCells(rowsNumbers: number, columnNumbers: number): Array<Array<IBodyCell>> {
+    this.bodyCells.length = 0;
+
+    for (let row = 1; row <= rowsNumbers; row++) {
+
+      const rowCells: Array<IBodyCell> = [];
+
+      for (let col = 0; col <= columnNumbers; col++) {
+        const cell = this.newCell();
+        if (col === 0) {
+          cell.id = this.DEFAULT_COLUMN_CHAR;
+          cell.value = row.toString();
+        } else {
+          const startIndex = col - 1;
+          cell.id = this.generateColumnNumber(row, startIndex);
+          cell.value = '';
+        }
+        rowCells.push(cell);
+      }
+      this.bodyCells.push(rowCells);
+    }
+
+    return this.bodyCells;
   }
 
-  private InsertDefaultColumn() {
-    const defaultColumn = this.NewHeaderCell();
-    defaultColumn.Value = this.DEFAULT_COLUMN_CHAR;
+  private insertDefaultColumn() {
+    const defaultColumn = this.newCell();
+    defaultColumn.value = this.DEFAULT_COLUMN_CHAR;
     return defaultColumn;
   }
 
-  private GenerateColumnNumber(columnIndex: number) {
-    return this.SpreadSheetUtils.GenerateColumnNumber(columnIndex);
+  private generateColumnNumber(rowIndex: number, columnIndex: number) {
+    return this.spreadSheetUtils.generateColumnNumber(rowIndex, columnIndex);
   }
 
-  private NewHeaderCell(): HeaderCell {
-    return new HeaderCell();
+  private generateHeaderColumnNumber(columnIndex: number) {
+    return this.spreadSheetUtils.generateHeaderColumnValue(columnIndex);
+  }
+
+  private newCell(): Cell {
+    return new Cell();
   }
 }
 
-export class SpreadSheet {
-
-  private readonly HeaderCellBuilder: HeaderCellBuilder;
-
-  constructor() {
-    this.HeaderCellBuilder = new HeaderCellBuilder();
-
-    const g = this.HeaderCellBuilder.BuildHeaderCells(10);
-  }
-
-}
