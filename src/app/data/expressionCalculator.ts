@@ -28,6 +28,12 @@ export default class ExpressionCalculator {
 
   private readonly OperatorFactory: OperatorFactory;
 
+  private readonly regExpOperators = /[\*,+,\/,-]+/;
+
+  private readonly errorMessage = '!VALID';
+
+  private readonly starCharExpression = '=';
+
   constructor() {
     this.OperatorFactory = new OperatorFactory();
 
@@ -157,12 +163,12 @@ export default class ExpressionCalculator {
     arrayValues: Array<Array<IBodyCell>>
   ): string {
     let result: string;
-    const regExpOperators = /[\*,+,\/,-]+/;
-    const arrayIds = expression.trim().split(regExpOperators);
+
+    const arrayIds = expression.trim().split(this.regExpOperators);
     const valueArrays = this.getValueFromArrayId(arrayIds, arrayValues);
 
     if (valueArrays.length === 0 || valueArrays.length === 1) {
-      return valueArrays.join() || '!VALID';
+      return valueArrays.join() || this.errorMessage;
     }
 
     for (let id = 0; id < arrayIds.length; id++) {
@@ -189,12 +195,13 @@ export default class ExpressionCalculator {
           const findCell: IBodyCell = row.find(cell => cell.id === id);
           if (findCell) {
             if (
-              (isNaN(+findCell.value) && findCell.value[0] !== '=') ||
+              (isNaN(+findCell.value) &&
+                findCell.value[0] !== this.starCharExpression) ||
               findCell.value === ''
             ) {
               values.length = 0;
               return values;
-            } else if (findCell.value[0] === '=') {
+            } else if (findCell.value[0] === this.starCharExpression) {
               values.push(
                 +this.getResultFromExpression(
                   findCell.value.slice(1),
