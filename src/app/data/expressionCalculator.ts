@@ -1,6 +1,6 @@
-import { Priority } from './priority';
-import { IOperator } from './operator';
-import { IBodyCell } from '../spreadsheet/cell';
+import { Priority } from "./priority";
+import { IOperator } from "./operator";
+import { IBodyCell } from "../spreadsheet/cell";
 
 export class Operator implements IOperator {
   public value: string;
@@ -32,24 +32,26 @@ export default class ExpressionCalculator {
     this.OperatorFactory = new OperatorFactory();
 
     this.defaultApplicationOperators = [
-      this.OperatorFactory.NewOperator('+', Priority.Low, (l, r) => l + r),
-      this.OperatorFactory.NewOperator('*', Priority.High, (l, r) => l * r),
-      this.OperatorFactory.NewOperator('/', Priority.Medium, (l, r) => {
+      this.OperatorFactory.NewOperator("+", Priority.Low, (l, r) => l + r),
+      this.OperatorFactory.NewOperator("*", Priority.High, (l, r) => l * r),
+      this.OperatorFactory.NewOperator("/", Priority.Medium, (l, r) => {
         try {
           return l / r;
         } catch (error) {
           return 0;
         }
       }),
-      this.OperatorFactory.NewOperator('-', Priority.Low, (l, r) => l - r)
+      this.OperatorFactory.NewOperator("-", Priority.Low, (l, r) => l - r)
     ];
 
-    this.defaultApplicationOperators.sort((a, b) => a.priority > b.priority ? -1 : 1);
+    this.defaultApplicationOperators.sort((a, b) =>
+      a.priority > b.priority ? -1 : 1
+    );
   }
 
-  public convertExpressionToArray(expression: string): string[]  {
-    let operand = '';
-    const emptyString = '';
+  public convertExpressionToArray(expression: string): string[] {
+    let operand = "";
+    const emptyString = "";
     const elementsExpression: string[] = [];
 
     for (const currentChar of expression) {
@@ -71,9 +73,9 @@ export default class ExpressionCalculator {
   public calculation(elementsExpression: string[]): string {
     let result: string;
 
-    for ( const operator of this.defaultApplicationOperators ) {
-      for ( let index = 0; index < elementsExpression.length; index++ ) {
-        const indexOperator = (elementsExpression.indexOf(operator.value));
+    for (const operator of this.defaultApplicationOperators) {
+      for (let index = 0; index < elementsExpression.length; index++) {
+        const indexOperator = elementsExpression.indexOf(operator.value);
         if (indexOperator !== -1) {
           const leftIndex = indexOperator - 1;
           const rightIndex = indexOperator + 1;
@@ -91,14 +93,76 @@ export default class ExpressionCalculator {
     return result;
   }
 
-  public getResultFromExpression(expression: string, arrayValues: Array<Array<IBodyCell>>): string {
+  private getExpressionOnParentheses(expression: string): string {
+    let resultExpression: string;
+    const openParantheses = "(";
+    const closeParantheses = ")";
+    let startPosition: number;
+    let endPosition: number;
+
+    endPosition = expression.indexOf(closeParantheses);
+    startPosition = expression.lastIndexOf(openParantheses, endPosition) + 1;
+    resultExpression = expression.slice(startPosition, endPosition);
+
+    return resultExpression;
+  }
+
+  private checkExpressionOnParantheses(expression: string): boolean {
+    let findParantheses: boolean;
+    const closeParantheses = ")";
+
+    findParantheses =
+      expression.indexOf(closeParantheses) !== -1 ? true : false;
+
+    return findParantheses;
+  }
+
+  public getResult(
+    expression: string,
+    arrayValues: Array<Array<IBodyCell>>
+  ): string {
+    let result: string;
+    let partExpression: string;
+    let resultPartExpression: string;
+    let expressionProcessing: string;
+
+    if (this.checkExpressionOnParantheses(expression)) {
+      expressionProcessing = expression;
+
+      while (this.checkExpressionOnParantheses(expressionProcessing)) {
+        partExpression = this.getExpressionOnParentheses(expressionProcessing);
+        resultPartExpression = this.getResultFromExpression(
+          partExpression,
+          arrayValues
+        );
+
+        // add parantheses for update expression
+        partExpression = `(${partExpression})`;
+        expressionProcessing = expressionProcessing.replace(
+          partExpression,
+          resultPartExpression
+        );
+      }
+
+      result = this.getResultFromExpression(expressionProcessing, arrayValues);
+      return result;
+    } else {
+      result = this.getResultFromExpression(expression, arrayValues);
+      return result;
+    }
+  }
+
+  public getResultFromExpression(
+    expression: string,
+    arrayValues: Array<Array<IBodyCell>>
+  ): string {
     let result: string;
     const regExpOperators = /[\*,+,\/,-]+/;
     const arrayIds = expression.trim().split(regExpOperators);
     const valueArrays = this.getValueFromArrayId(arrayIds, arrayValues);
 
     if (valueArrays.length === 0 || valueArrays.length === 1) {
-      return valueArrays.join() || '!VALID';
+      return valueArrays.join() || "!VALID";
     }
 
     for (let id = 0; id < arrayIds.length; id++) {
@@ -111,7 +175,10 @@ export default class ExpressionCalculator {
     return result;
   }
 
-  public getValueFromArrayId(arrayIds: string[], arrayValues: Array<Array<IBodyCell>> ): number[] {
+  public getValueFromArrayId(
+    arrayIds: string[],
+    arrayValues: Array<Array<IBodyCell>>
+  ): number[] {
     const values: number[] = [];
 
     for (const id of arrayIds) {
@@ -119,15 +186,21 @@ export default class ExpressionCalculator {
         values.push(parseInt(id));
       } else {
         for (const row of arrayValues) {
-          const findCell: IBodyCell = row.find(cell => cell.id === id );
+          const findCell: IBodyCell = row.find(cell => cell.id === id);
           if (findCell) {
-            if (isNaN(+findCell.value)
-              && findCell.value[0] !== '='
-              || findCell.value === '') {
-                values.length = 0;
+            if (
+              (isNaN(+findCell.value) && findCell.value[0] !== "=") ||
+              findCell.value === ""
+            ) {
+              values.length = 0;
               return values;
-            } else if (findCell.value[0] === '=') {
-              values.push(+this.getResultFromExpression(findCell.value.slice(1), arrayValues));
+            } else if (findCell.value[0] === "=") {
+              values.push(
+                +this.getResultFromExpression(
+                  findCell.value.slice(1),
+                  arrayValues
+                )
+              );
             } else {
               values.push(parseInt(findCell.value));
             }

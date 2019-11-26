@@ -1,37 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
-import { ICell, IBodyCell } from './cell';
-import CellBuilder from './spread.sheet';
-import ExpressionCalculator from '../data/expressionCalculator';
+import { ICell, IBodyCell } from "./cell";
+import CellBuilder from "./spread.sheet";
+import ExpressionCalculator from "../data/expressionCalculator";
 
 @Component({
-  selector: 'app-spreadsheet',
-  templateUrl: './spreadsheet.component.html',
-  styleUrls: ['./spreadsheet.component.scss']
+  selector: "app-spreadsheet",
+  templateUrl: "./spreadsheet.component.html",
+  styleUrls: ["./spreadsheet.component.scss"]
 })
-
 export class SpreadsheetComponent implements OnInit {
+  private rows: number;
 
-  private  rows: number;
-
-  private  cols: number;
+  private cols: number;
 
   public headerTable: Array<ICell>;
 
-  public  bodyTable: Array<Array<IBodyCell>>;
+  public bodyTable: Array<Array<IBodyCell>>;
 
-  public  showMessage = false;
+  public showMessage = false;
 
   constructor(private route: ActivatedRoute) {}
 
   public trackBy(index, item) {
-    if (!item) { return null; }
+    if (!item) {
+      return null;
+    }
     return index;
   }
 
   generateTable() {
-    const table = new (CellBuilder)();
+    const table = new CellBuilder();
     this.headerTable = table.buildHeaderCells(this.cols);
     this.bodyTable = table.buildBodyCells(this.rows, this.cols);
   }
@@ -49,15 +49,18 @@ export class SpreadsheetComponent implements OnInit {
   calculateTable() {
     this.toggleMessage();
     for (const row of this.bodyTable) {
-      row.forEach((element) => {
-        if (element.value.charAt(0) === '=') {
+      row.forEach(element => {
+        if (element.value.charAt(0) === "=") {
           this.toggleMessage();
           const expression = element.value.slice(1);
           const calculateExpression = new ExpressionCalculator();
-          element.value = calculateExpression.getResultFromExpression(expression, this.bodyTable);
+          element.value = calculateExpression.getResult(
+            expression,
+            this.bodyTable
+          );
         }
-    });
-  }
+      });
+    }
   }
 
   toggleMessage() {
@@ -66,11 +69,10 @@ export class SpreadsheetComponent implements OnInit {
 
   ngOnInit(): void {
     const routeParams = this.route.queryParams;
-    routeParams.subscribe((data) => {
+    routeParams.subscribe(data => {
       this.rows = data.rows;
       this.cols = data.cols;
     });
     this.generateTable();
   }
-
 }
