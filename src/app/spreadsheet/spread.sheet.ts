@@ -12,7 +12,6 @@ export abstract class BuilderBase {
   constructor() {
     this.spreadSheetUtils = new SpreadSheetUtils();
   }
-
 }
 
 export default class CellBuilder extends BuilderBase {
@@ -21,12 +20,11 @@ export default class CellBuilder extends BuilderBase {
   private readonly headerCells: Array<ICell> = [];
   private readonly bodyCells: Array<Array<IBodyCell>> = [];
 
-  constructor()  {
+  constructor() {
     super();
   }
 
   public buildHeaderCells(columnNumbers: number): Array<ICell> {
-
     this.headerCells.length = 0;
     this.headerCells.push(this.insertDefaultColumn());
 
@@ -39,11 +37,13 @@ export default class CellBuilder extends BuilderBase {
     return this.headerCells;
   }
 
-  public buildBodyCells(rowsNumbers: number, columnNumbers: number): Array<Array<IBodyCell>> {
+  public buildBodyCells(
+    rowsNumbers: number,
+    columnNumbers: number
+  ): Array<Array<IBodyCell>> {
     this.bodyCells.length = 0;
 
     for (let row = 1; row <= rowsNumbers; row++) {
-
       const rowCells: Array<IBodyCell> = [];
 
       for (let col = 0; col <= columnNumbers; col++) {
@@ -82,4 +82,3 @@ export default class CellBuilder extends BuilderBase {
     return new Cell();
   }
 }
-

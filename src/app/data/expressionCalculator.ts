@@ -1,6 +1,6 @@
-import { Priority } from "./priority";
-import { IOperator } from "./operator";
-import { IBodyCell } from "../spreadsheet/cell";
+import { Priority } from './priority';
+import { IOperator } from './operator';
+import { IBodyCell } from '../spreadsheet/cell';
 
 export class Operator implements IOperator {
   public value: string;
@@ -32,16 +32,16 @@ export default class ExpressionCalculator {
     this.OperatorFactory = new OperatorFactory();
 
     this.defaultApplicationOperators = [
-      this.OperatorFactory.NewOperator("+", Priority.Low, (l, r) => l + r),
-      this.OperatorFactory.NewOperator("*", Priority.High, (l, r) => l * r),
-      this.OperatorFactory.NewOperator("/", Priority.Medium, (l, r) => {
+      this.OperatorFactory.NewOperator('+', Priority.Low, (l, r) => l + r),
+      this.OperatorFactory.NewOperator('*', Priority.High, (l, r) => l * r),
+      this.OperatorFactory.NewOperator('/', Priority.Medium, (l, r) => {
         try {
           return l / r;
         } catch (error) {
           return 0;
         }
       }),
-      this.OperatorFactory.NewOperator("-", Priority.Low, (l, r) => l - r)
+      this.OperatorFactory.NewOperator('-', Priority.Low, (l, r) => l - r)
     ];
 
     this.defaultApplicationOperators.sort((a, b) =>
@@ -50,8 +50,8 @@ export default class ExpressionCalculator {
   }
 
   public convertExpressionToArray(expression: string): string[] {
-    let operand = "";
-    const emptyString = "";
+    let operand = '';
+    const emptyString = '';
     const elementsExpression: string[] = [];
 
     for (const currentChar of expression) {
@@ -95,8 +95,8 @@ export default class ExpressionCalculator {
 
   private getExpressionOnParentheses(expression: string): string {
     let resultExpression: string;
-    const openParantheses = "(";
-    const closeParantheses = ")";
+    const openParantheses = '(';
+    const closeParantheses = ')';
     let startPosition: number;
     let endPosition: number;
 
@@ -109,7 +109,7 @@ export default class ExpressionCalculator {
 
   private checkExpressionOnParantheses(expression: string): boolean {
     let findParantheses: boolean;
-    const closeParantheses = ")";
+    const closeParantheses = ')';
 
     findParantheses =
       expression.indexOf(closeParantheses) !== -1 ? true : false;
@@ -162,7 +162,7 @@ export default class ExpressionCalculator {
     const valueArrays = this.getValueFromArrayId(arrayIds, arrayValues);
 
     if (valueArrays.length === 0 || valueArrays.length === 1) {
-      return valueArrays.join() || "!VALID";
+      return valueArrays.join() || '!VALID';
     }
 
     for (let id = 0; id < arrayIds.length; id++) {
@@ -189,12 +189,12 @@ export default class ExpressionCalculator {
           const findCell: IBodyCell = row.find(cell => cell.id === id);
           if (findCell) {
             if (
-              (isNaN(+findCell.value) && findCell.value[0] !== "=") ||
-              findCell.value === ""
+              (isNaN(+findCell.value) && findCell.value[0] !== '=') ||
+              findCell.value === ''
             ) {
               values.length = 0;
               return values;
-            } else if (findCell.value[0] === "=") {
+            } else if (findCell.value[0] === '=') {
               values.push(
                 +this.getResultFromExpression(
                   findCell.value.slice(1),

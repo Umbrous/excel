@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { ICell, IBodyCell } from "./cell";
-import CellBuilder from "./spread.sheet";
-import ExpressionCalculator from "../data/expressionCalculator";
+import { ICell, IBodyCell } from './cell';
+import CellBuilder from './spread.sheet';
+import ExpressionCalculator from '../data/expressionCalculator';
 
 @Component({
-  selector: "app-spreadsheet",
-  templateUrl: "./spreadsheet.component.html",
-  styleUrls: ["./spreadsheet.component.scss"]
+  selector: 'app-spreadsheet',
+  templateUrl: './spreadsheet.component.html',
+  styleUrls: ['./spreadsheet.component.scss']
 })
 export class SpreadsheetComponent implements OnInit {
   private rows: number;
@@ -48,12 +48,12 @@ export class SpreadsheetComponent implements OnInit {
 
   calculateTable() {
     this.toggleMessage();
+    const calculateExpression = new ExpressionCalculator();
     for (const row of this.bodyTable) {
       row.forEach(element => {
-        if (element.value.charAt(0) === "=") {
+        if (element.value.charAt(0) === '=') {
           this.toggleMessage();
           const expression = element.value.slice(1);
-          const calculateExpression = new ExpressionCalculator();
           element.value = calculateExpression.getResult(
             expression,
             this.bodyTable
